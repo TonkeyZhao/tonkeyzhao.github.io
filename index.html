@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页 | 测绘科学与技术 · 遥感影像 · 机器视觉</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #165DFF;
+            --primary-light: #4080FF;
+            --dark: #1D2129;
+            --gray: #4E5969;
+            --light-gray: #F2F3F5;
+            --border: #E5E6EB;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 30px rgba(22, 93, 255, 0.15);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--dark);
+            line-height: 1.7;
+            background: #FAFBFC;
+        }
+
+        /* 导航栏 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray);
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* 英雄区 */
+        .hero {
+            padding: 140px 24px 100px;
+            background: linear-gradient(135deg, #E8F3FF 0%, #F0F7FF 50%, #FFFFFF 100%);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 20px;
+            color: var(--gray);
+            margin-bottom: 24px;
+        }
+
+        .hero .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .tag {
+            padding: 6px 16px;
+            background: rgba(22, 93, 255, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* 通用区块 */
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 48px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+            margin: 12px auto 0;
+        }
+
+        /* 教育背景 */
+        .education-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .edu-card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .edu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .edu-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .edu-card .time {
+            color: var(--primary);
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .edu-card p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* 技能模块 */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .skill-card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .skill-card h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skill-card ul {
+            list-style: none;
+            color: var(--gray);
+        }
+
+        .skill-card li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .skill-card li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* 项目经历 */
+        .project-category {
+            margin-bottom: 40px;
+        }
+
+        .project-category h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-left: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .project-header {
+            padding: 24px 24px 0;
+        }
+
+        .project-card h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .project-time {
+            font-size: 13px;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .project-content {
+            padding: 0 24px 24px;
+            flex: 1;
+        }
+
+        .project-content ul {
+            list-style: none;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .project-content li {
+            padding: 4px 0;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .project-content li::before {
+            content: "·";
+            position: absolute;
+            left: 6px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* 荣誉奖项 */
+        .honors-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .honor-item {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.3s;
+        }
+
+        .honor-item:hover {
+            transform: translateX(4px);
+        }
+
+        .honor-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(22, 93, 255, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* 自我评价 */
+        .about-box {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E8F3FF 100%);
+            padding: 40px;
+            border-radius: 16px;
+            color: var(--dark);
+        }
+
+        .about-box p {
+            color: var(--gray);
+            line-height: 1.9;
+        }
+
+        /* 页脚 */
+        footer {
+            background: var(--dark);
+            color: #86909C;
+            text-align: center;
+            padding: 32px 24px;
+            font-size: 14px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero .subtitle {
+                font-size: 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .education-list,
+            .skills-grid,
+            .honors-list {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 60px 20px;
+            }
+
+            .section-title {
+                font-size: 26px;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">个人主页</div>
+            <ul class="nav-links">
+                <li><a href="#education">教育背景</a></li>
+                <li><a href="#skills">专业技能</a></li>
+                <li><a href="#projects">项目经历</a></li>
+                <li><a href="#honors">荣誉奖项</a></li>
+                <li><a href="#about">自我评价</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 英雄区 -->
+    <div class="hero">
+        <h1>你好，我是开发者</h1>
+        <p class="subtitle">测绘科学与技术硕士 · 遥感影像处理 · 机器视觉 · 独立游戏开发</p>
+        <div class="tags">
+            <span class="tag">数字图像处理</span>
+            <span class="tag">深度学习</span>
+            <span class="tag">GIS开发</span>
+            <span class="tag">无人机应用</span>
+            <span class="tag">微信小游戏</span>
+        </div>
+    </div>
+
+    <!-- 教育背景 -->
+    <section id="education">
+        <h2 class="section-title">教育背景</h2>
+        <div class="education-list">
+            <div class="edu-card">
+                <h3>中国石油大学（华东）</h3>
+                <div class="time">2020.09 - 2023.06 · 测绘科学与技术 · 硕士</div>
+                <p>主修课程：数字图像处理、航空航天摄影测量、新型遥感信息处理、高级人工智能、应用统计方法、地理信息理论与新技术</p>
+                <p style="margin-top: 8px;">研究方向：遥感影像智能解译、深度学习地物识别</p>
+            </div>
+            <div class="edu-card">
+                <h3>江苏海洋大学</h3>
+                <div class="time">2016.09 - 2020.06 · 海洋技术 · 本科</div>
+                <p>主修课程：遥感原理与应用、GIS原理与应用、GPS导航与定位、数据库原理、Java程序设计</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 专业技能 -->
+    <section id="skills" style="background: var(--light-gray); max-width: 100%;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">专业技能</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>图像处理与机器视觉</h3>
+                    <ul>
+                        <li>掌握数字图像处理核心理论，熟悉图像滤波、边缘检测、特征提取、图像分割、目标检测等经典算法</li>
+                        <li>具备影像缺陷检测、智能解译全流程项目实践，可独立完成数据标注、模型训练、结果验证与落地优化</li>
+                        <li>了解OpenCV视觉库，具备三维实景建模、点云处理相关实践基础，熟悉多视几何基本原理</li>
+                        <li>熟练使用ENVI、SNAP、Global Mapper等专业图像处理工具，支持大批量影像数据自动化批处理</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>编程与开发框架</h3>
+                    <ul>
+                        <li>熟练使用Python实现图像处理算法与数据批处理，掌握JavaScript、HTML/CSS；了解C++</li>
+                        <li>熟悉PyTorch深度学习框架，掌握CNN、DNN等经典神经网络结构，有深度学习图像分割项目落地经验</li>
+                        <li>了解Vue、OpenLayers、Cesium等前端GIS框架，具备WebGIS开发基础</li>
+                        <li>具备完整工程化项目思维，可完成从需求分析、方案设计到落地交付的全流程工作</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>遥感测绘与GIS</h3>
+                    <ul>
+                        <li>熟练使用ArcGIS、QGIS、MapGIS等地理信息软件，具备地理空间分析与数据处理能力</li>
+                        <li>掌握航空航天摄影测量、SAR影像处理、海洋遥感等专业技术，熟悉遥感影像解译全流程</li>
+                        <li>具备无人机航测、二维/三维实景建模、道路病害巡检等工程落地经验</li>
+                        <li>持有国家大地测量员证书，具备严谨的工程数据校验与标准化作业意识</li>
+                    </ul>
+                </div>
+                <div class="skill-card">
+                    <h3>综合能力与资质</h3>
+                    <ul>
+                        <li>大学英语六级（CET-6 502分），可流畅阅读英文技术文档与学术文献</li>
+                        <li>持有AOPA多旋翼无人机装调检修教员证，具备专业培训与实操教学能力</li>
+                        <li>具备政企项目对接、招投标、赛事统筹、校企合作等综合业务经验</li>
+                        <li>独立完成微信小游戏从0到1开发上线，熟悉产品全生命周期与冷启动运营</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目经历 -->
+    <section id="projects">
+        <h2 class="section-title">项目经历</h2>
+
+        <!-- 科研项目 -->
+        <div class="project-category">
+            <h3>科研与学术项目</h3>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <h4>基于深度学习的Sentinel-1A SAR影像水体提取研究</h4>
+                        <div class="project-time">硕士在读期间</div>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>针对SAR遥感影像开展水体目标智能提取研究，完成影像预处理、样本区域筛选、数据集构建全流程</li>
+                            <li>采用阈值法完成水体样本标注，基于CNN构建语义分割模型，通过随机参数调优筛选最优模型</li>
+                            <li>有效解决山体阴影与水体的误分类问题，模型支持跨区域、多幅影像批量自动化提取</li>
+                            <li>相关成果获全国高等学校大学生测绘科技论文竞赛特等奖</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-header">
+                        <h4>基于高德地图API的路径规划系统开发</h4>
+                        <div class="project-time">个人开发项目</div>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>基于JavaScript与高德地图API开发Web端路径规划系统，完成地图容器初始化、交互控件集成</li>
+                            <li>使用GeoJSON实现地理数据持久化存储，支持自定义起终点与途经点</li>
+                            <li>实现行驶策略配置与移动轨迹动态模拟，独立完成需求分析、代码开发、调试优化全流程</li>
+                            <li>项目源码已开源至GitHub</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 工作项目 -->
+        <div class="project-category">
+            <h3>职场项目经历</h3>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <h4>胶州市交通局无人机道路病害巡检项目</h4>
+                        <div class="project-time">2025.11 - 至今</div>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>负责无人机影像采集、二维/三维实景建模、道路病害智能识别全流程技术工作</li>
+                            <li>基于数字图像处理技术，实现路面裂缝、坑槽、沉陷等典型病害的自动检测与定位</li>
+                            <li>搭建常态化巡检作业机制，输出标准化巡检报告，成为当地道路巡检示范应用场景</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-header">
+                        <h4>智能除草车整机研发项目</h4>
+                        <div class="project-time">2025.05 - 2025.07</div>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>负责智能除草车感知模块方案设计与硬件集成，搭载视觉避障、GPS定位、语音喊话模块</li>
+                            <li>实现行人目标识别、主动避障停机、自主路径规划功能，替代人工完成草场草坪修剪</li>
+                            <li>跟进第二代产品结构开模迭代，核心技术自有率达95%</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-header">
+                        <h4>车载垂起固定翼无人机库运维与场景落地</h4>
+                        <div class="project-time">2025.12 - 至今</div>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>负责车载无人机库基站、飞控、电池等核心硬件故障检修和日常维护</li>
+                            <li>独立完成车辆定位、起降点采集、航线规划、无人机自主飞行全流程实操</li>
+                            <li>落地垃圾巡检、森林防火巡检等业务场景，将遥感解译、测绘建模知识应用于低空项目</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-header">
+                        <h4>大疆机场3车载化改装部署项目</h4>
+                        <div class="project-time">2026.01 - 至今</div>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>完成大疆机场3车载改造、硬件安装、通电通网、服务器配置、排水系统布设</li>
+                            <li>实现无人机起降平台机动部署，落地应用于道路巡检业务</li>
+                            <li>掌握无人机基站部署、网络配置、设备调试全套技能</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 个人开发项目 -->
+        <div class="project-category">
+            <h3>独立游戏开发</h3>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <h4>「点方块」反应类微信小游戏</h4>
+                        <div class="project-time">已上线运营</div>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>独立完成休闲益智类微信小游戏从玩法设计、代码开发到上线发布全流程</li>
+                            <li>核心玩法：根据指令点击对应颜色方块，关卡递进缩短反应时限，加入移动、淡出等干扰机制</li>
+                            <li>完整实现复活分享裂变、结算评价、排行榜等功能，覆盖休闲小游戏核心留存与社交传播</li>
+                            <li>完整跑通微信小游戏发布、数据监控、用户增长全链路，沉淀产品冷启动与迭代经验</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-header">
+                        <h4>古风割草类微信小游戏</h4>
+                        <div class="project-time">开发中</div>
+                    </div>
+                    <div class="project-content">
+                        <ul>
+                            <li>主打古风题材肉鸽割草玩法，参考成熟爆款玩法进行微创新</li>
+                            <li>设计射击战斗、成长体系、关卡递进等核心内容，提升玩法深度与可玩性</li>
+                            <li>基于前作开发经验，重点优化用户留存设计与产品完整度</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 荣誉奖项 -->
+    <section id="honors" style="background: var(--light-gray); max-width: 100%;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">荣誉奖项</h2>
+            <div class="honors-list">
+                <div class="honor-item">
+                    <div class="honor-icon">🏆</div>
+                    <div>2019年 全国高等学校大学生测绘科技论文竞赛 特等奖</div>
+                </div>
+                <div class="honor-item">
+                    <div class="honor-icon">📐</div>
+                    <div>2019年 校数学竞赛 三等奖</div>
+                </div>
+                <div class="honor-item">
+                    <div class="honor-icon">🎓</div>
+                    <div>2020年 研究生三等入学奖学金</div>
+                </div>
+                <div class="honor-item">
+                    <div class="honor-icon">📚</div>
+                    <div>2022年 研究生三等学业奖学金</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 自我评价 -->
+    <section id="about">
+        <h2 class="section-title">自我评价</h2>
+        <div class="about-box">
+            <p>
+                测绘科学与技术专业硕士，具备扎实的数字图像处理、遥感测绘与计算机视觉理论基础，拥有深度学习图像分割、工程场景视觉检测的完整项目经验。熟悉图像特征提取、目标检测、三维建模核心技术，掌握Python与主流图像处理工具，了解OpenCV与深度学习框架，具备快速学习新技术栈的能力。
+            </p>
+            <p style="margin-top: 16px;">
+                职场经历覆盖低空无人机赛道，兼具技术研发、政企项目对接与综合统筹能力；业余持续探索独立游戏开发，具备从0到1产品落地意识与自我驱动力。做事严谨踏实，具备工程化思维与问题解决能力，能够快速适配技术研发与工程项目类岗位需求。
+            </p>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>© 2026 个人主页 · 测绘科学与技术 · 遥感影像 · 机器视觉 · 独立开发</p>
+    </footer>
+</body>
+</html>
